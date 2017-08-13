@@ -67,7 +67,7 @@ int main(int argc, const char *argv[]) {
     }
     std::random_device device;
     auto seed = device();
-    auto count = 100*1000*1000;
+    auto count = 1000*1000*1000;
     std::minstd_rand engine(seed);
     auto acc = 0l;
     auto driver = [&](unsigned (*digits)(unsigned long)) {
@@ -89,8 +89,12 @@ int main(int argc, const char *argv[]) {
         (alexandrescu - nothing)/base << ' ' << engine() << std::endl;
     acc = 0;
     engine = std::minstd_rand(seed);
-    auto naive = bmark::benchmark(driver, digits10_naive);
+    auto naive = bmark::benchmark(driver, digits10_mul);
     std::cout << naive << ' ' << acc << ' ' <<
         (naive - nothing)/base << ' ' << engine() << std::endl;
+    acc = 0;
+    engine = std::minstd_rand(seed);
+    auto repeat = bmark::benchmark(driver, digits10);
+    std::cout << repeat << ' ' << (repeat - nothing)/base << ' ' << acc << std::endl;
     return 0;
 }
