@@ -40,9 +40,9 @@ struct P10<meta::IndexPack<unsigned long, p2s...>> {
         return arr[p2];
     }
 
-    static constexpr long unsigned ndigits(unsigned p2) {
-        constexpr unsigned long arr[] = {
-            pureconstexpr::log10floor(1ul << p2s)...
+    static constexpr unsigned ndigits(unsigned p2) {
+        constexpr unsigned arr[] = {
+            (1 + pureconstexpr::log10floor(1ul << p2s))...
         };
         return arr[p2];
     }
@@ -55,6 +55,6 @@ constexpr unsigned digits10(unsigned long arg) {
     auto l2f = log2floor(arg);
     using Combination = detail::P10<meta::Indices<sizeof(long unsigned)*8 - 1>>; 
     auto cut = arg < Combination::nextPowerOf10(l2f) ? 0 : 1;
-    auto base = 1 + Combination::ndigits(l2f);
+    auto base = Combination::ndigits(l2f);
     return cut + base;
 }
