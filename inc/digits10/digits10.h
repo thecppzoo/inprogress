@@ -21,7 +21,7 @@ constexpr unsigned log2floor(unsigned long arg) {
 
 namespace pureconstexpr {
 
-    constexpr unsigned long cutoff(unsigned long arg) {
+    constexpr unsigned long nextPowerOf10(unsigned long arg) {
         auto l10 = log10floor(arg);
         return exp10(l10 + 1);
     }
@@ -30,18 +30,18 @@ namespace pureconstexpr {
 
 namespace detail {
 
-template<typename> struct Cutoff;
+template<typename> struct P10;
 template<unsigned long... p2s>
-struct Cutoff<meta::IndexPack<unsigned long, p2s...>> {
-    static long unsigned cutoff(unsigned p2) {
-        static constexpr unsigned long arr[] = {
-            pureconstexpr::cutoff(1ul << p2s)...
+struct P10<meta::IndexPack<unsigned long, p2s...>> {
+    static constexpr long unsigned nextPowerOf10(unsigned p2) {
+        constexpr unsigned long arr[] = {
+            pureconstexpr::nextPowerOf10(1ul << p2s)...
         };
         return arr[p2];
     }
 
-    static long unsigned ndigits(unsigned p2) {
-        static constexpr unsigned long arr[] = {
+    static constexpr long unsigned ndigits(unsigned p2) {
+        constexpr unsigned long arr[] = {
             pureconstexpr::log10floor(1ul << p2s)...
         };
         return arr[p2];
@@ -50,11 +50,11 @@ struct Cutoff<meta::IndexPack<unsigned long, p2s...>> {
 
 }
 
-unsigned long digits10(unsigned long arg) {
+constexpr unsigned digits10(unsigned long arg) {
     if(arg < 2) { return 1; }
     auto l2f = log2floor(arg);
-    using Combination = detail::Cutoff<meta::Indices<sizeof(long unsigned)*8 - 1>>; 
-    auto cut = arg < Combination::cutoff(l2f) ? 0 : 1;
+    using Combination = detail::P10<meta::Indices<sizeof(long unsigned)*8 - 1>>; 
+    auto cut = arg < Combination::nextPowerOf10(l2f) ? 0 : 1;
     auto base = 1 + Combination::ndigits(l2f);
     return cut + base;
 }
