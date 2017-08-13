@@ -1,3 +1,5 @@
+#pragma once
+
 #include "meta/Indices.h"
 
 /// pureconstexpr is meant for functions too slow to be called at runtime
