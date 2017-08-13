@@ -30,8 +30,10 @@ TEST_CASE("Comprehensive", "[digits10]") {
     auto last = 1ul << 63;
     auto expected = 1;
     auto val = 1ul;
-    for(; val < last; val *= 10) {
+    while(val < last) {
         REQUIRE(digits10(val) == expected);
+        val *= 10;
+        REQUIRE(digits10(val - 1) == expected);
         ++expected;
     }
     REQUIRE(digits10(val) == expected);
