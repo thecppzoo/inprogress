@@ -52,8 +52,8 @@ struct P10<meta::IndexPack<unsigned long, p2s...>> {
 
 }
 
-constexpr unsigned digits10(unsigned long arg) {
-    if(arg < 10) { return 1; }
+constexpr unsigned digits10(unsigned long argument) {
+    auto arg = argument | 1;
     auto l2f = log2floor(arg);
     using Combination = detail::P10<meta::Indices<sizeof(long unsigned)*8 - 1>>; 
     auto cut = arg < Combination::nextPowerOf10(l2f) ? 0 : 1;
